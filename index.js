@@ -54,21 +54,7 @@ cron.schedule("31 13 * * 1-5", async () => {
   timezone: "Etc/UTC"
 });
 
-app.get("/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
-});
-
-app.get("/stocks", async (req, res) => {
-  try {
-    const response = await axios.get(`${process.env.SOURCE_URL}`);
-    res.json(response.data);
-  } catch (err) {
-    console.error("Error fetching current stocks:", err.message);
-    res.status(500).json({ error: "Failed to fetch current stocks" });
-  }
-});
-
-app.get("/stocks/history", async (req, res) => {
+app.get("/history", async (req, res) => {
   try {
     const allData = await StockHistory.find({});
     if (!allData || !allData.length) {
@@ -87,7 +73,7 @@ app.get("/stocks/history", async (req, res) => {
   }
 });
 
-app.get("/stocks/save-today", async (req, res) => {
+app.get("/save-today", async (req, res) => {
   try {
     const response = await axios.get(`${process.env.SOURCE_URL}`);
     const data = response.data;
@@ -96,17 +82,6 @@ app.get("/stocks/save-today", async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: "Failed to save data" });
-  }
-});
-
-app.get("/stocks/:symbol", async (req, res) => {
-  try {
-    const symbol = req.params.symbol;
-    const response = await axios.get(`${process.env.SOURCE_URL}/${symbol}`);
-    res.json(response.data);
-  } catch (err) {
-    console.error(`Error fetching ${req.params.symbol}:`, err.message);
-    res.status(500).json({ error: "Failed to fetch stock" });
   }
 });
 
