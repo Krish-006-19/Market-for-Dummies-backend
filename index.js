@@ -72,12 +72,19 @@ app.get("/history", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch history", details: err.message });
   }
 });
-app.get('/history/:symbol',async (req,res)=> {
-  const symbol = req.params.symbol;
-  const data = await StockHistory.findOne({ symbol })
-  if(!data || !data.length) return res.status(404).json({ error: "No stock history found" })
-  res.json(data.history)
-})
+
+app.get('/history/:symbol', async (req,res) => {
+  try {
+    const symbol = req.params.symbol.toUpperCase();
+    const data = await StockHistory.findOne({ symbol });
+    if (!data) return res.status(404).json({ error: `No history found for ${symbol}` });
+    res.json(data.history);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.get("/save-today", async (req, res) => {
   try {
     const response = await axios.get(`${process.env.SOURCE_URL}`);
