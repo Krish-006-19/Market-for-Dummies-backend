@@ -40,7 +40,7 @@ async function saveEndOfDay(dailyData) {
   }
 }
 
-cron.schedule("31 13 * * 1-5", async () => {
+cron.schedule("31 15 * * 1-5", async () => {
   try {
     console.log("📦 Fetching end-of-day data...");
     const response = await axios.get(`${process.env.SOURCE_URL}`);
