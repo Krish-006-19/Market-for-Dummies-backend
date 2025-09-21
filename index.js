@@ -9,7 +9,6 @@ const cron = require("node-cron");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 🔧 FIXED: Use environment variable for database
 const MONGODB_URI = `${process.env.MONGODB_URI}`
 Konnect(MONGODB_URI);
 
@@ -41,7 +40,6 @@ async function saveEndOfDay(dailyData) {
   }
 }
 
-// 🔧 FIXED: Correct time for 7:01 PM IST (1:31 PM UTC)
 cron.schedule("31 13 * * 1-5", async () => {
   try {
     console.log("📦 Fetching end-of-day data...");
@@ -56,7 +54,6 @@ cron.schedule("31 13 * * 1-5", async () => {
   timezone: "Etc/UTC"
 });
 
-// 🔧 ADDED: Health check endpoint for hosting platforms
 app.get("/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
